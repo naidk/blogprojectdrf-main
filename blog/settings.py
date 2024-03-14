@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
-    'whitenoise.runserver_nostatic', #Make sure to add this 
+    'whitenoise.runserver_nostatic', #Make sure to add this
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
@@ -52,6 +52,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'app.LoginCheckMiddleWare.LoginCheckMiddleWare',
 ]
 
 ROOT_URLCONF = 'blog.urls'
@@ -79,10 +81,10 @@ WSGI_APPLICATION = 'blog.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
-   'default': {
+    'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-   }
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
 }
 
 
@@ -122,24 +124,30 @@ USE_TZ = True
 #https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = '/static/'
-#STATICFILES_DIRS = [
-#    os.path.join(BASE_DIR, 'static')
-#]
+STATICFILES_DIRS = [
+   os.path.join(BASE_DIR, 'static')
+]
 
 #BASE_DIR=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-MEDIA_URLS ='/media/'
+MEDIA_URL ='/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+
+#For Custom USER
+AUTH_USER_MODEL = "app.CustomUser"
+
+# Registering Custom Backend "EmailBackEnd"
+AUTHENTICATION_BACKENDS = ['app.EmailBackEnd.EmailBackEnd']
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
-    
+
     'DEFAULT_AUTHENTICATION_CLASSES': (
-      
+
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
